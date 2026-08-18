@@ -1,0 +1,15 @@
+<section class="converter" id="converter" data-category="{{ converter_category_slug }}">
+  <div class="status"><span>LIVE CONVERSION</span><span>DECIMAL ENGINE</span><span class="ready" id="provider-status"><i></i> READY_</span></div>
+  <div class="category-tabs" aria-label="Conversion category">
+    {% for cat in categories %}<button type="button" data-category="{{ cat.slug }}" class="{% if cat == initial %}active{% endif %}">{{ cat.name }}</button>{% empty %}<span>{{ category.name }}</span>{% endfor %}
+  </div>
+  <div class="conversion-grid">
+    <label><span>FROM</span><input id="from-value" inputmode="decimal" value="1" aria-label="Value to convert"><select id="from-unit" aria-label="From unit">{% for unit in units %}<option value="{{ unit.slug }}" data-scale="{{ unit.scale }}" data-offset="{{ unit.offset }}" data-symbol="{{ unit.symbol }}" data-mode="{{ unit.mode }}" data-search="{{ unit.name }} {{ unit.plural }} {{ unit.symbol }} {{ unit.slug }} {{ unit.aliases }}">{{ unit.name }} · {{ unit.symbol }}</option>{% endfor %}</select></label>
+    <button class="swap" type="button" aria-label="Swap units">⇅</button>
+    <label><span>TO</span><output id="result" aria-live="polite">—</output><select id="to-unit" aria-label="To unit">{% for unit in units %}<option value="{{ unit.slug }}" data-scale="{{ unit.scale }}" data-offset="{{ unit.offset }}" data-symbol="{{ unit.symbol }}" data-mode="{{ unit.mode }}" data-search="{{ unit.name }} {{ unit.plural }} {{ unit.symbol }} {{ unit.slug }} {{ unit.aliases }}" {% if forloop.counter == 2 %}selected{% endif %}>{{ unit.name }} · {{ unit.symbol }}</option>{% endfor %}</select></label>
+  </div>
+  <div class="converter-foot"><p id="rate">Choose two units to begin.</p><div><button id="favorite" type="button">☆ FAVORITE</button><button id="copy" class="primary-action" type="button">COPY CALCULATION</button></div></div>
+  <label class="unit-search"><span>SEARCH UNITS · NAMES, SYMBOLS & ALIASES</span><input id="unit-search" type="search" placeholder="metre, lbs, centigrade…" autocomplete="off" aria-controls="unit-search-results"></label><div class="unit-search-results" id="unit-search-results" aria-live="polite" hidden></div>
+  <div class="format-tools" aria-label="Result formatting controls"><label><span>FORMAT</span><select id="format-mode"><option value="auto">Auto</option><option value="fixed">Decimal places</option><option value="significant">Significant figures</option><option value="scientific">Scientific</option><option value="fraction">Fraction (inches)</option></select></label><label><span>PRECISION</span><select id="precision"><option>2</option><option selected>4</option><option>6</option><option>8</option><option>10</option></select></label><button id="share-conversion" type="button">SHARE LINK</button><button id="toggle-multi" type="button" aria-expanded="false" aria-controls="multi-results">MULTI-CONVERT</button></div>
+  <section class="multi-results" id="multi-results" hidden><div><span class="eyebrow">MULTI-CONVERT</span><button id="close-multi" type="button" aria-label="Close multi-convert">×</button></div><ul aria-live="polite"></ul></section>
+</section>

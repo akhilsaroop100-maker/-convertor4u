@@ -1,0 +1,18 @@
+{% extends "base.html" %}{% block structured_data %}<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"{{ site_url|escapejs }}/"},{"@type":"ListItem","position":2,"name":"{{ category.name|escapejs }}","item":"{{ canonical_url|escapejs }}"}]}</script>{% if category.faq %}<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{% for item in category.faq %}{"@type":"Question","name":"{{ item.question|escapejs }}","acceptedAnswer":{"@type":"Answer","text":"{{ item.answer|escapejs }}"}}{% if not forloop.last %},{% endif %}{% endfor %}]}</script>{% endif %}{% endblock %}{% block content %}
+<nav class="crumbs" aria-label="Breadcrumb"><a href="/">Home</a> / {{ category.name }} converter</nav>
+<section class="page-head"><p class="eyebrow">{{ category.name|upper }} / {{ category.number|stringformat:'02d' }}</p><h1>{{ category.name }} converter</h1><p>{{ category.description }}</p></section>
+{% include "converters/_converter.html" %}
+<section class="unit-directory"><p class="eyebrow">AVAILABLE UNITS</p><div>{% for unit in units %}<span><b>{{ unit.symbol }}</b>{{ unit.name }}</span>{% endfor %}</div></section>
+<section class="related-section"><p class="eyebrow">POPULAR {{ category.name|upper }} CONVERSIONS</p><h2>Detailed formulas and tables</h2><div>{% for pair in popular_pairs %}<a href="{{ pair.url }}"><strong>{{ pair.source.name }} to {{ pair.target.name }}</strong><span>{{ pair.source.symbol }} → {{ pair.target.symbol }}</span></a>{% endfor %}</div></section>
+<article class="category-guide">
+  <header><p class="eyebrow">PRACTICAL GUIDE / REVIEWED</p><h2>Understanding {{ category.name|lower }} units</h2><p>{{ category.guide_intro }}</p></header>
+  <div class="guide-grid">
+    <section><span class="article-no">01</span><h3>Where these units are used</h3><p>{{ category.real_world_uses }}</p></section>
+    <section><span class="article-no">02</span><h3>Rounding and precision</h3><p>{{ category.rounding_guidance }}</p></section>
+    <section><span class="article-no">03</span><h3>Regional differences</h3><p>{{ category.regional_notes }}</p></section>
+    <section><span class="article-no">04</span><h3>Common mistakes</h3><p>{{ category.common_mistakes }}</p></section>
+  </div>
+  {% if category.faq %}<section class="faq-section"><p class="eyebrow">USEFUL ANSWERS</p><h2>{{ category.name }} conversion FAQs</h2>{% for item in category.faq %}<details><summary>{{ item.question }}</summary><p>{{ item.answer }}</p></details>{% endfor %}</section>{% endif %}
+  <footer class="review-line">Reviewed by {{ category.reviewed_by|default:"Convertor4U Editorial Team" }}{% if category.reviewed_on %} · {{ category.reviewed_on|date:"j F Y" }}{% endif %} · <a href="{% url 'contact' %}?page={{ canonical_url|urlencode }}">Report a correction</a></footer>
+</article>
+{% endblock %}

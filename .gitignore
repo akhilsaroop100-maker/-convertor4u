@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+.qa-venv/
+
+# Local configuration and secrets
+.env
+.env.*
+!.env.example
+
+# Local data and generated files
+db.sqlite3
+staticfiles/
+*.log
+
+# Test and editor files
+.coverage
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.vscode/
+.idea/
+
+# Operating-system files
+.DS_Store
+Thumbs.db

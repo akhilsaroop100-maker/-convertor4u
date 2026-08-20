@@ -22,7 +22,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware", "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 ROOT_URLCONF = "config.urls"
-TEMPLATES = [{"BACKEND": "django.template.backends.django.DjangoTemplates", "DIRS": [BASE_DIR / "templates"], "APP_DIRS": True, "OPTIONS": {"context_processors": ["django.template.context_processors.request", "django.contrib.auth.context_processors.auth", "django.contrib.messages.context_processors.messages"]}}]
+TEMPLATES = [{"BACKEND": "django.template.backends.django.DjangoTemplates", "DIRS": [BASE_DIR / "templates"], "APP_DIRS": True, "OPTIONS": {"context_processors": ["django.template.context_processors.request", "django.contrib.auth.context_processors.auth", "django.contrib.messages.context_processors.messages", "converters.context_processors.public_site_settings"]}}]
 WSGI_APPLICATION = "config.wsgi.application"
 DATABASES = {"default": dj_database_url.config(default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}", conn_max_age=600, conn_health_checks=True)}
 AUTH_PASSWORD_VALIDATORS = []
@@ -45,6 +45,12 @@ SECURE_CONTENT_TYPE_NOSNIFF = True
 X_FRAME_OPTIONS = "DENY"
 SITE_URL = os.environ.get("SITE_URL", "").rstrip("/")
 MAINTENANCE_MODE = os.environ.get("MAINTENANCE_MODE", "False").lower() == "true"
+PUBLIC_OPERATOR_NAME = os.environ.get("PUBLIC_OPERATOR_NAME", "Akhil Saroop").strip()
+PUBLIC_EDITOR_NAME = os.environ.get("PUBLIC_EDITOR_NAME", "Akhil Saroop").strip()
+PUBLIC_CONTACT_EMAIL = os.environ.get("PUBLIC_CONTACT_EMAIL", "convertor4u@gmail.com").strip()
+GOOGLE_SITE_VERIFICATION = os.environ.get("GOOGLE_SITE_VERIFICATION", "").strip()
+ADSENSE_PUBLISHER_ID = os.environ.get("ADSENSE_PUBLISHER_ID", "").strip()
+ADSENSE_ENABLED = os.environ.get("ADSENSE_ENABLED", "False").lower() == "true"
 
 CACHES = {"default": {"BACKEND": "django.core.cache.backends.locmem.LocMemCache", "LOCATION": "convertor4u-runtime"}}
 SECURE_REFERRER_POLICY = "strict-origin-when-cross-origin"

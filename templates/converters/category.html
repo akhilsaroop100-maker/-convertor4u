@@ -13,6 +13,6 @@
     <section><span class="article-no">04</span><h3>Common mistakes</h3><p>{{ category.common_mistakes }}</p></section>
   </div>
   {% if category.faq %}<section class="faq-section"><p class="eyebrow">USEFUL ANSWERS</p><h2>{{ category.name }} conversion FAQs</h2>{% for item in category.faq %}<details><summary>{{ item.question }}</summary><p>{{ item.answer }}</p></details>{% endfor %}</section>{% endif %}
-  <footer class="review-line">Reviewed by {{ category.reviewed_by|default:"Convertor4U Editorial Team" }}{% if category.reviewed_on %} · {{ category.reviewed_on|date:"j F Y" }}{% endif %} · <a href="{% url 'contact' %}?page={{ canonical_url|urlencode }}">Report a correction</a></footer>
+  <footer class="review-line">Reviewed by {% if public_editor_name %}{{ public_editor_name }}{% else %}{{ category.reviewed_by|default:"Convertor4U Editorial Team" }}{% endif %}{% if category.reviewed_on %} · {{ category.reviewed_on|date:"j F Y" }}{% endif %} · <a href="{% url 'contact' %}?page={{ canonical_url|urlencode }}">Report a correction</a></footer>
 </article>
 {% endblock %}

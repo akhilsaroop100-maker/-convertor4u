@@ -2,7 +2,7 @@ from decimal import Decimal
 from django.conf import settings
 from django.core.cache import cache
 from django.db import connection
-from django.http import Http404, JsonResponse
+from django.http import Http404, HttpResponse, HttpResponseNotFound, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from .content import EXAMPLE_VALUES, pair_editorial
 from .engine import ConversionError, convert, format_decimal, formula_text
@@ -30,7 +30,7 @@ STATIC_PAGES = {
     },
     "privacy": {
         "eyebrow": "LEGAL / PRIVACY", "title": "Privacy policy",
-        "description": "How Convertor4U handles data and device-local preferences.",
+        "description": "How Convertor4U handles local preferences, contact data, service logs, advertising cookies, identifiers, consent, and privacy choices.",
         "template": "converters/privacy.html",
     },
     "accuracy": {
@@ -237,6 +237,15 @@ def health(request):
     return response
 
 def robots(request): return render(request, "robots.txt", {"site_url": _site_url(request)}, content_type="text/plain")
+
+def ads_txt(request):
+    publisher_id = settings.ADSENSE_PUBLISHER_ID
+    if not publisher_id:
+        return HttpResponseNotFound("Ad inventory is not configured.\n", content_type="text/plain")
+    seller_id = publisher_id[3:] if publisher_id.startswith("ca-") else publisher_id
+    if not seller_id.startswith("pub-"):
+        return HttpResponseNotFound("Ad inventory is not configured.\n", content_type="text/plain")
+    return HttpResponse(f"google.com, {seller_id}, DIRECT, f08c47fec0942fa0\n", content_type="text/plain")
 
 def page_not_found(request, exception):
     context = {"robots_meta": "noindex,nofollow"}

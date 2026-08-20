@@ -21,6 +21,18 @@ services:
         value: https://convertor4u.com
       - key: SECURE_SSL_REDIRECT
         value: true
+      - key: PUBLIC_OPERATOR_NAME
+        value: Akhil Saroop
+      - key: PUBLIC_EDITOR_NAME
+        value: Akhil Saroop
+      - key: PUBLIC_CONTACT_EMAIL
+        value: convertor4u@gmail.com
+      - key: GOOGLE_SITE_VERIFICATION
+        sync: false
+      - key: ADSENSE_PUBLISHER_ID
+        sync: false
+      - key: ADSENSE_ENABLED
+        value: false
       - key: DATABASE_URL
         fromDatabase: {name: convertor4u-db, property: connectionString}
   - type: cron

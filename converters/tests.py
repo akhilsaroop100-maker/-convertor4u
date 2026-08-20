@@ -92,6 +92,36 @@ class ReferencePageTests(TestCase):
         self.assertContains(response, 'CONVERTOR4U.COM')
         self.assertNotContains(response, 'CONVERT/26')
 
+    @override_settings(
+        PUBLIC_OPERATOR_NAME="Example Operator",
+        PUBLIC_EDITOR_NAME="Example Editor",
+        PUBLIC_CONTACT_EMAIL="editor@example.com",
+        GOOGLE_SITE_VERIFICATION="verification-token",
+        ADSENSE_PUBLISHER_ID="ca-pub-1234567890123456",
+        ADSENSE_ENABLED=True,
+    )
+    def test_public_identity_and_google_configuration(self):
+        home = self.client.get("/")
+        self.assertContains(home, 'name="google-site-verification" content="verification-token"')
+        self.assertContains(home, 'name="google-adsense-account" content="ca-pub-1234567890123456"')
+        self.assertContains(home, "editor@example.com")
+        self.assertContains(self.client.get("/about/"), "Example Operator")
+        self.assertContains(self.client.get("/accuracy/"), "Example Editor")
+        self.assertEqual(
+            self.client.get("/ads.txt").content.decode(),
+            "google.com, pub-1234567890123456, DIRECT, f08c47fec0942fa0\n",
+        )
+
+    @override_settings(ADSENSE_PUBLISHER_ID="")
+    def test_ads_txt_is_absent_until_configured(self):
+        self.assertEqual(self.client.get("/ads.txt").status_code, 404)
+
+    def test_privacy_has_advertising_disclosures(self):
+        response = self.client.get("/privacy/")
+        for text in ("Google advertising and cookies", "IP addresses", "personalized advertising", "Google Ads Settings", "YourAdChoices"):
+            with self.subTest(text=text):
+                self.assertContains(response, text)
+
     def test_category_links_to_conversion_pages(self):
         category = Category.objects.create(name="Length", slug="length", number=20, base_unit_slug="meter")
         Unit.objects.create(category=category, name="Meter", plural="meters", symbol="m", slug="meter", scale=1)
@@ -134,6 +164,12 @@ class EditorialQualityTests(TestCase):
         self.assertContains(response, "Real-world example")
         self.assertContains(response, "FAQPage")
         self.assertIn(("length", "cm", "inches"), PairSitemap().items())
+
+    def test_priority_page_has_pair_specific_editorial(self):
+        response = self.client.get("/length/cm-to-inches/")
+        self.assertContains(response, "one inch is exactly 2.54 centimeters")
+        self.assertContains(response, "Do not divide by 2.5")
+        self.assertContains(response, "Why is 2.54 used?")
 
     def test_unreviewed_page_is_excluded_from_pair_sitemap(self):
         response = self.client.get("/length/yard-to-nautical-mile/")
